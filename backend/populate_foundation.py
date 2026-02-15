@@ -7,7 +7,7 @@ from google import genai
 
 # 1. Environment Sync
 load_dotenv()
-client = genai.Client(api_key=os.getenv("REDACTED_API_KEYSyC92VC1BnyetUmRRpiHyGsRcz3REqkJFYg"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # 2. Material Library (Semantic Data for Aetheris OS)
 materials = [
