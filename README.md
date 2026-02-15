@@ -58,7 +58,7 @@ Traditional "smart buildings" waste datacenter heat through cooling systems. Aet
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/Aetheris-OS.git
+git clone https://github.com/Divijanand/Aetheris-OS.git
 cd aetheris-os
 ```
 
