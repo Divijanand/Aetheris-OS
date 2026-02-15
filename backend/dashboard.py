@@ -2,8 +2,9 @@ import streamlit as st
 import httpx
 import pandas as pd
 import time
+import os
 
-BACKEND = "http://localhost:8000"
+BACKEND = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Aetheris OS - Command Center", layout="wide")
 st.title("🌿 Aetheris OS: The Living Machine")
