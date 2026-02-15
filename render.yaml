@@ -3,18 +3,18 @@ services:
     name: aetheris-backend
     env: python
     plan: free
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port 10000"
+    # Fix: Point to the requirements file in the backend folder
+    buildCommand: "pip install -r requirements.txt" 
+    # Fix: Use the correct module path for uvicorn
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port 10000"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9 # Essential to stop gRPC/3.14 conflicts
       - key: GEMINI_API_KEY
         sync: false
       - key: OPENWEATHER_API_KEY
         sync: false
       - key: MONGO_URI
-        sync: false
-      - key: BUILDING_LAT
-        sync: false
-      - key: BUILDING_LON
         sync: false
 
   - type: web
@@ -22,7 +22,10 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "streamlit run backend/dashboard.py --server.port 10000 --server.address 0.0.0.0"
+    # Fix: Run streamlit from within the backend folder
+    startCommand: "cd backend && streamlit run dashboard.py --server.port 10000 --server.address 0.0.0.0"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: BACKEND_URL
         value: https://aetheris-backend.onrender.com
