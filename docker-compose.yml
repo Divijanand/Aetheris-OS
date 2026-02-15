@@ -1,0 +1,14 @@
+services:
+  actian:
+    image: williamimoh/actian-vectorai-db:1.0b
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./data:/data
+    restart: always
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    restart: always
