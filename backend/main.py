@@ -591,6 +591,66 @@ Return:
 
 
 # ===========================================================================
+# VOICE INTENT (FIXED)
+# ===========================================================================
+
+@app.post("/voice/intent")
+async def process_voice_intent(user_text: str):
+    """Natural language command processing"""
+    try:
+        print(f"🔵 VOICE INTENT: {user_text}")
+
+        # Get current system state
+        machine_status = await get_living_machine_status()
+        print("✅ Got machine status")
+
+        state_model: LivingMachineState = machine_status["living_machine_state"]
+        print(f"✅ Got state model: {state_model}")
+
+        # Convert once -> safe dict usage everywhere below
+        state = state_model.model_dump()
+        print("✅ Dumped state to dict")
+
+        # Format outside temp safely
+        outside_temp = state.get("outside_temp")
+        outside_temp_str = f"{outside_temp:.0f}°F" if outside_temp is not None else "N/A"
+        print(f"✅ Formatted temp: {outside_temp_str}")
+
+        prompt = f"""You are Aetheris OS, the AI managing a Living Building system.
+
+CURRENT SYSTEM STATE:
+- Foundation Temperature: {state['foundation_temp_celsius']:.1f}°C ({state['thermal_capacity_used']:.1f}% capacity)
+- Server Heat Output: {state['server_heat_output_watts']:.1f}W
+- Smart Glass Opacity: {state['smart_glass_opacity']}%
+- Outside Temperature: {outside_temp_str}
+- System Status: {'SATURATED' if state['is_saturated'] else 'NOMINAL'}
+
+USER INPUT: "{user_text}"
+
+TASK: Respond as the building AI explaining what action you're taking. Be conversational and specific. Reference actual systems by name. Keep response to 2-3 sentences maximum."""
+
+        print("✅ Calling Gemini...")
+        response = gemini_client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+        )
+        print("✅ Got Gemini response")
+
+        return {
+            "user_input": user_text,
+            "response": response.text,
+            "state_snapshot": state,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+
+    except Exception as e:
+        print(f"❌ VOICE INTENT ERROR: {type(e).__name__}: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Voice intent error: {str(e)}")
+
+
+# ===========================================================================
 # SERVER ENTRY POINT
 # ===========================================================================
 
