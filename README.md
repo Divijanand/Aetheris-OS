@@ -74,7 +74,7 @@ pip install -r requirements.txt
 
 Create `backend/.env`:
 ```env
-GEMINI_API_KEY=your_API_key_here
+GEMINI_API_KEY=AIzaSyBfYGpuk0IHqW2fqj1re_QjwtuYS3Ea-Rg
 OPENWEATHER_API_KEY=f58be8b80cfd96af86e0eed56e6136fe
 ACTIAN_HOST=127.0.0.1
 ACTIAN_PORT=50051
